@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<title>MyMovies Ultra</title>
+<style>
+:root{--bg:#08090d;--card:#11131a;--card2:#181b25;--text:#f5f7fb;--muted:#98a0b0;--line:#292e3b;--a:#7c5cff;--b:#e94b9a;--gold:#ffd35a;--green:#24d19b;--red:#ff5f75}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -10%,#43237a66,transparent 34%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}.app{max-width:1180px;margin:auto;padding:17px 16px 100px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:6px 0 20px}.brand{font-size:27px;font-weight:900}.brand i{font-style:normal;color:var(--a)}.mini{font-size:10px;color:#71798a}.topBtns{display:flex;gap:8px}.movieSearch{position:relative}.searchResults{position:absolute;z-index:30;right:0;left:0;top:52px;background:#11141c;border:1px solid var(--line);border-radius:16px;max-height:330px;overflow:auto;box-shadow:0 20px 45px #000b}.searchResult{display:flex;gap:10px;padding:9px;border-bottom:1px solid var(--line);cursor:pointer}.searchResult:last-child{border-bottom:0}.searchResult img{width:45px;height:67px;object-fit:cover;border-radius:8px;background:#1a1e28}.searchResult b{display:block;margin-bottom:4px}.searchResult span{font-size:11px;color:var(--muted);line-height:1.5}.autoNote{font-size:11px;color:var(--muted);margin-top:7px}.tmdbStatus{font-size:11px;padding:8px 10px;border-radius:10px;background:#0b0e14;border:1px solid var(--line);color:var(--muted)}.icon{width:43px;height:43px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:#fff;font-size:18px}
+.hero{border:1px solid var(--line);border-radius:29px;padding:24px;background:linear-gradient(135deg,#1b1230,#11151e 68%);box-shadow:0 22px 55px #0007}.hero h1{font-size:32px;margin:0 0 7px}.hero p{color:var(--muted);margin:0;line-height:1.75}.search{display:flex;gap:8px;margin-top:18px}.search input{flex:1;min-width:0;background:#080a0f;border:1px solid var(--line);color:#fff;padding:14px 15px;border-radius:15px;outline:none}.btn,.save{background:linear-gradient(135deg,var(--a),var(--b));color:white;border:0;border-radius:15px;padding:0 17px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:17px 0}.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}.tab{white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--muted);padding:10px 14px;border-radius:13px}.tab.active{background:var(--a);color:#fff;border-color:transparent}
+.tools{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.tools select,.tools button{background:var(--card);border:1px solid var(--line);color:#fff;padding:9px 11px;border-radius:11px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:20px}.poster{aspect-ratio:2/3;background:#1a1e28;position:relative;overflow:hidden}.poster img{width:100%;height:100%;object-fit:cover;display:block}.fallback{height:100%;display:grid;place-items:center;font-size:48px}.badge{position:absolute;right:8px;top:8px;background:#000b;border:1px solid #ffffff18;border-radius:9px;padding:5px 8px;font-size:10px}.fav{position:absolute;left:8px;top:8px;background:#000b;border:0;border-radius:50%;width:34px;height:34px;color:#fff}.info{padding:11px}.title{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:var(--muted);margin-top:5px}.rating{font-size:12px;color:var(--gold);margin-top:6px}.cardBtns{display:flex;gap:5px;margin-top:9px}.cardBtns button{flex:1;background:var(--card2);border:1px solid var(--line);color:#fff;border-radius:9px;padding:8px 3px;font-size:10px}.empty{grid-column:1/-1;text-align:center;padding:55px 15px;border:1px dashed var(--line);border-radius:20px;color:var(--muted)}
+.fab{position:fixed;bottom:19px;left:19px;width:59px;height:59px;border:0;border-radius:20px;background:linear-gradient(135deg,var(--a),var(--b));color:#fff;font-size:28px;box-shadow:0 15px 40px #0009;z-index:5}
+.modal{position:fixed;inset:0;background:#000b;backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center;z-index:10}.modal.show{display:flex}.sheet{width:min(720px,100%);max-height:92vh;overflow:auto;background:#11141c;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:20px}.sheet h2{margin:0 0 15px}.form{display:grid;gap:10px}.form input,.form select,.form textarea{width:100%;background:#080a0f;border:1px solid var(--line);color:#fff;border-radius:13px;padding:12px;outline:none}.form textarea{min-height:90px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.modalBtns{display:flex;gap:8px;margin-top:14px}.modalBtns button{flex:1;padding:12px;border-radius:13px;background:var(--card2);color:#fff;border:1px solid var(--line)}.modalBtns .save{border:0}.detail{display:grid;grid-template-columns:145px 1fr;gap:16px}.detail img{width:145px;aspect-ratio:2/3;object-fit:cover;border-radius:16px}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{background:var(--card2);border:1px solid var(--line);padding:6px 8px;border-radius:9px;font-size:11px}.note{line-height:1.8;color:#cbd0da;font-size:13px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}.app{padding:25px 28px 100px}.modal{align-items:center}.sheet{border-radius:28px}.detail img{width:190px}.detail{grid-template-columns:190px 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">My<i>Movies</i> <small class="mini">ULTRA</small></div><div class="topBtns"><button class="icon" onclick="openSettings()">⚙️</button><button class="icon" onclick="backup()">↥</button><button class="icon" onclick="$('restore').click()">↧</button><input id="restore" type="file" accept=".json" hidden onchange="restore(event)"></div></header>
+<section class="hero"><h1>کتابخانه فیلم و سریال تو 🎬📺</h1><p>فیلم‌ها و سریال‌هایت را ذخیره کن، امتیاز بده، علاقه‌مندی‌ها را مدیریت کن و هر وقت خواستی تریلرشان را پیدا کن.</p><div class="search"><input id="q" oninput="render()" placeholder="جستجوی فیلم یا سریال، ژانر یا سال..."><button class="btn" onclick="openAdd()">＋ افزودن</button></div></section>
+<section class="stats"><div class="stat"><b id="all">0</b><span>کل موارد</span></div><div class="stat"><b id="seen">0</b><span>دیده‌شده</span></div><div class="stat"><b id="todo">0</b><span>لیست تماشا</span></div><div class="stat"><b id="favs">0</b><span>علاقه‌مندی</span></div></section>
+<nav class="tabs"><button class="tab active" data-t="all">همه</button><button class="tab" data-t="movie">🎬 فیلم</button><button class="tab" data-t="tv">📺 سریال</button><button class="tab" data-t="watch">لیست تماشا</button><button class="tab" data-t="seen">دیده‌شده</button><button class="tab" data-t="fav">❤️ علاقه‌مندی</button></nav>
+<div class="tools"><select id="genre" onchange="render()"><option value="">همه ژانرها</option></select><select id="sort" onchange="render()"><option value="new">جدیدترین</option><option value="rating">بیشترین امتیاز</option><option value="year">جدیدترین سال</option><option value="title">الفبا</option></select><button onclick="sample()">✨ اضافه کردن نمونه</button><button onclick="wipe()">پاک کردن همه</button></div>
+<main id="grid" class="grid"></main>
+</div><button class="fab" onclick="openAdd()">＋</button>
+
+<div class="modal" id="modal"><div class="sheet"><h2 id="formTitle">افزودن فیلم یا سریال</h2><div class="form"><select id="type" onchange="movieLookupDebounced()"><option value="movie">🎬 فیلم</option><option value="tv">📺 سریال</option></select><div class="movieSearch"><input id="title" placeholder="نام فیلم یا سریال را بنویس... *" autocomplete="off" oninput="movieLookupDebounced()"><div id="searchResults" class="searchResults" style="display:none"></div></div><div class="autoNote">🔎 اسم فیلم را بنویس؛ MyMovies خودش فیلم، پوستر، سال، ژانر و امتیاز را پیدا می‌کند.</div><div class="row"><input id="year" type="number" placeholder="سال"><input id="rating" type="number" min="0" max="10" step=".1" placeholder="امتیاز از ۱۰"></div><input id="genreInput" placeholder="ژانر"><input id="poster" placeholder="پوستر خودکار می‌آید" readonly><select id="status"><option value="watch">می‌خواهم ببینم</option><option value="seen">دیده‌ام</option></select><textarea id="note" placeholder="یادداشت شخصی..."></textarea></div><div class="modalBtns"><button onclick="closeModal()">لغو</button><button class="save" onclick="saveMovie()">ذخیره فیلم</button></div></div></div>
+<div class="modal" id="settingsModal"><div class="sheet"><h2>تنظیمات جستجوی خودکار 🎬</h2><p class="note">برای آوردن خودکار اطلاعات و پوستر فیلم‌ها، یک‌بار توکن TMDB را وارد کن. این مقدار فقط روی همین دستگاه ذخیره می‌شود.</p><div class="form"><input id="tmdbToken" type="password" placeholder="TMDB API Read Access Token"><div id="tmdbStatus" class="tmdbStatus"></div></div><div class="modalBtns"><button onclick="closeSettings()">لغو</button><button class="save" onclick="saveSettings()">ذخیره تنظیمات</button></div></div></div><div class="modal" id="detailModal"><div class="sheet" id="detail"></div></div>
+
+
+<script>
+const KEY="mymovies-ultra-v3";
+const TMDB_KEY="mymovies-tmdb-token-v1";
+let movies=JSON.parse(localStorage.getItem(KEY)||"[]"),tab="all",edit=null,lookupTimer=null;
+const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const tmdbGenres={28:"اکشن",12:"ماجراجویی",16:"انیمیشن",35:"کمدی",80:"جنایی",99:"مستند",18:"درام",10751:"خانوادگی",14:"فانتزی",36:"تاریخی",27:"ترسناک",10402:"موسیقی",9648:"معمایی",10749:"عاشقانه",878:"علمی‌تخیلی",10770:"تلویزیونی",53:"هیجانی",10752:"جنگی",37:"وسترن"};
+const tmdbTvGenres={10759:"اکشن و ماجراجویی",16:"انیمیشن",35:"کمدی",80:"جنایی",99:"مستند",18:"درام",10751:"خانوادگی",10762:"کودک",9648:"معمایی",10763:"اخبار",10764:"واقع‌نما",10765:"علمی‌تخیلی و فانتزی",10766:"صابون",10767:"گفتگو",10768:"جنگی و سیاسی",37:"وسترن"};
+
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active"); tab=b.dataset.t; render();
+});
+function db(){localStorage.setItem(KEY,JSON.stringify(movies))}
+function labelType(m){return m.type==="tv"?"📺 سریال":"🎬 فیلم"}
+function statusText(m){return m.status==="seen"?"✓ دیده‌ام":"◷ لیست تماشا"}
+function render(){
+  let gs=[...new Set(movies.flatMap(m=>(m.genre||"").split(",").map(x=>x.trim()).filter(Boolean)))].sort(),
+      old=$("genre").value;
+  $("genre").innerHTML='<option value="">همه ژانرها</option>'+gs.map(g=>`<option>${esc(g)}</option>`).join("");
+  $("genre").value=old;
+  let q=$("q").value.toLowerCase(),g=$("genre").value,s=$("sort").value;
+  let a=movies.filter(m=>
+    (!q||(m.title+" "+m.genre+" "+m.year).toLowerCase().includes(q))&&
+    (!g||(m.genre||"").split(",").map(x=>x.trim()).includes(g))&&
+    (tab==="all"||tab==="movie"&&m.type!=="tv"||tab==="tv"&&m.type==="tv"||
+     tab==="seen"&&m.status==="seen"||tab==="watch"&&m.status!=="seen"||tab==="fav"&&m.fav)
+  );
+  a.sort((x,y)=>s==="rating"?(y.rating||0)-(x.rating||0):s==="year"?(y.year||0)-(x.year||0):s==="title"?x.title.localeCompare(y.title,"fa"):(y.created||0)-(x.created||0));
+  $("grid").innerHTML=a.length?a.map(card).join(""):'<div class="empty">🎬📺<br><br>موردی پیدا نشد.<br>با «＋» اولین فیلم یا سریالت را اضافه کن.</div>';
+  $("all").textContent=movies.length;
+  $("seen").textContent=movies.filter(m=>m.status==="seen").length;
+  $("todo").textContent=movies.filter(m=>m.status!=="seen").length;
+  $("favs").textContent=movies.filter(m=>m.fav).length;
+}
+function card(m){
+  return `<article class="card"><div class="poster">${m.poster?`<img src="${esc(m.poster)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`:''}<div class="fallback" style="${m.poster?'display:none':''}">${m.type==="tv"?"📺":"🎬"}</div><span class="badge">${labelType(m)} • ${statusText(m)}</span><button class="fav" onclick="fav('${m.id}')">${m.fav?"❤️":"♡"}</button></div><div class="info"><div class="title">${esc(m.title)}</div><div class="meta">${m.year||"—"} • ${esc(m.genre||"بدون ژانر")}</div><div class="rating">${stars(m.rating)}</div><div class="cardBtns"><button onclick="details('${m.id}')">جزئیات</button><button onclick="editMovie('${m.id}')">ویرایش</button><button onclick="removeMovie('${m.id}')">حذف</button></div></div></article>`
+}
+function stars(r){r=Number(r)||0;return "★".repeat(Math.round(r/2))+"☆".repeat(5-Math.round(r/2))+(r?" "+r+"/10":"")}
+function openAdd(){
+  edit=null;$("formTitle").textContent="افزودن فیلم یا سریال";
+  ["title","year","rating","genreInput","poster","note"].forEach(x=>$(x).value="");
+  $("type").value="movie";$("status").value="watch";$("searchResults").style.display="none";$("modal").classList.add("show")
+}
+function editMovie(id){
+  let m=movies.find(x=>x.id===id);edit=id;$("formTitle").textContent="ویرایش فیلم یا سریال";
+  $("type").value=m.type||"movie";$("title").value=m.title;$("year").value=m.year||"";$("rating").value=m.rating||"";
+  $("genreInput").value=m.genre||"";$("poster").value=m.poster||"";$("status").value=m.status||"watch";$("note").value=m.note||"";
+  $("searchResults").style.display="none";$("modal").classList.add("show")
+}
+function closeModal(){$("modal").classList.remove("show")}
+function saveMovie(){
+  let t=$("title").value.trim();if(!t)return alert("نام فیلم یا سریال را وارد کن.");
+  let old=edit&&movies.find(m=>m.id===edit),m={
+    id:edit||crypto.randomUUID(),type:$("type").value,title:t,year:Number($("year").value)||"",
+    rating:Math.min(10,Math.max(0,Number($("rating").value)||0)),genre:$("genreInput").value.trim(),
+    poster:$("poster").value.trim(),status:$("status").value,note:$("note").value.trim(),
+    fav:old?.fav||false,created:old?.created||Date.now()
+  };
+  movies=edit?movies.map(x=>x.id===edit?m:x):[m,...movies];db();closeModal();render()
+}
+function fav(id){movies=movies.map(m=>m.id===id?({...m,fav:!m.fav}):m);db();render()}
+function removeMovie(id){let m=movies.find(x=>x.id===id);if(confirm("«"+m.title+"» حذف شود؟")){movies=movies.filter(x=>x.id!==id);db();render()}}
+function details(id){
+  let m=movies.find(x=>x.id===id);
+  $("detail").innerHTML=`<div class="detail"><div>${m.poster?`<img src="${esc(m.poster)}">`:`<div class="poster" style="width:145px;border-radius:16px"><div class="fallback">${m.type==="tv"?"📺":"🎬"}</div></div>`}</div><div><h2>${esc(m.title)}</h2><div class="chips"><span class="chip">${labelType(m)}</span><span class="chip">${m.year||"—"}</span><span class="chip">${esc(m.genre||"بدون ژانر")}</span><span class="chip">${statusText(m)}</span></div><div class="rating" style="margin:15px 0">${stars(m.rating)}</div><p class="note">${esc(m.note||"یادداشتی ثبت نشده.")}</p><div class="modalBtns"><button class="save" onclick="trailer('${encodeURIComponent(m.title)}')">▶ تریلر</button><button onclick="editMovie('${m.id}');closeDetail()">✎ ویرایش</button><button onclick="closeDetail()">بستن</button></div></div></div>`;
+  $("detailModal").classList.add("show")
+}
+function closeDetail(){$("detailModal").classList.remove("show")}
+function trailer(q){open("https://www.youtube.com/results?search_query="+q+"+trailer","_blank")}
+function backup(){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(movies,null,2)],{type:"application/json"}));a.download="MyMovies-backup.json";a.click()}
+function restore(e){
+  let f=e.target.files[0],r=new FileReader();
+  r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x))throw 0;movies=x.map(m=>({...m,type:m.type||"movie"}));db();render();alert("بازیابی با موفقیت انجام شد.")}catch{alert("فایل پشتیبان معتبر نیست.")}};
+  r.readAsText(f)
+}
+function wipe(){if(movies.length&&confirm("همه فیلم‌ها و سریال‌ها پاک شوند؟")){movies=[];db();render()}}
+function sample(){
+  let x=[["movie","Inception",2010,"علمی‌تخیلی، هیجانی",8.8],["movie","Interstellar",2014,"علمی‌تخیلی، درام",8.7],["movie","The Dark Knight",2008,"اکشن، جنایی",9],["tv","Breaking Bad",2008,"جنایی، درام",9.5],["tv","Dark",2017,"معمایی، علمی‌تخیلی، درام",8.7]];
+  movies.push(...x.map(z=>({id:crypto.randomUUID(),type:z[0],title:z[1],year:z[2],genre:z[3],rating:z[4],poster:"",status:"watch",note:"",fav:false,created:Date.now()+Math.random()})));db();render()
+}
+function getTmdbToken(){return localStorage.getItem(TMDB_KEY)||""}
+function openSettings(){
+  $("tmdbToken").value=getTmdbToken();
+  $("tmdbStatus").textContent=getTmdbToken()?"✅ توکن ثبت شده است.":"⚠️ هنوز توکن TMDB ثبت نشده.";
+  $("settingsModal").classList.add("show")
+}
+function closeSettings(){$("settingsModal").classList.remove("show")}
+function saveSettings(){
+  let v=$("tmdbToken").value.trim();if(v)localStorage.setItem(TMDB_KEY,v);else localStorage.removeItem(TMDB_KEY);
+  $("tmdbStatus").textContent=v?"✅ ذخیره شد.":"⚠️ توکن حذف شد.";setTimeout(closeSettings,500)
+}
+function movieLookupDebounced(){
+  clearTimeout(lookupTimer);let t=$("title").value.trim();
+  if(t.length<2){$("searchResults").style.display="none";return}
+  lookupTimer=setTimeout(()=>movieLookup(t),500)
+}
+async function movieLookup(q){
+  let token=getTmdbToken(),type=$("type").value;
+  if(!token){$("searchResults").innerHTML='<div class="searchResult"><div><b>اتصال TMDB تنظیم نشده</b><span>روی ⚙️ بزن و TMDB API Read Access Token را وارد کن.</span></div></div>';$("searchResults").style.display="block";return}
+  $("searchResults").innerHTML='<div class="searchResult"><div><b>در حال جستجو…</b><span>در TMDB دنبال '+(type==="tv"?"سریال":"فیلم")+' می‌گردیم</span></div></div>';$("searchResults").style.display="block";
+  try{
+    let endpoint=type==="tv"?"/search/tv":"/search/movie";
+    let url="https://api.themoviedb.org/3"+endpoint+"?query="+encodeURIComponent(q)+"&language=fa-IR&include_adult=false&page=1";
+    let res=await fetch(url,{headers:{Authorization:"Bearer "+token,accept:"application/json"}});
+    if(!res.ok)throw new Error("TMDB "+res.status);
+    let data=await res.json(),results=(data.results||[]).filter(x=>x.poster_path).slice(0,7);
+    if(!results.length){$("searchResults").innerHTML='<div class="searchResult"><div><b>'+(type==="tv"?"سریالی":"فیلمی")+' پیدا نشد</b><span>اسم را کمی دقیق‌تر وارد کن.</span></div></div>';return}
+    $("searchResults").innerHTML=results.map(x=>{
+      let poster="https://image.tmdb.org/t/p/w185"+x.poster_path;
+      let year=((type==="tv"?x.first_air_date:x.release_date)||"").slice(0,4);
+      return `<div class="searchResult" onclick='selectTmdb(${JSON.stringify({id:x.id,type:type,title:x.title||x.name,year:year,rating:x.vote_average||0,poster:poster,overview:x.overview||"",genre_ids:x.genre_ids||[]})})'><img src="${poster}"><div><b>${esc(x.title||x.name)}</b><span>${year||"—"} • ⭐ ${Number(x.vote_average||0).toFixed(1)}<br>${esc((x.overview||"").slice(0,90))}</span></div></div>`
+    }).join("")
+  }catch(e){
+    $("searchResults").innerHTML='<div class="searchResult"><div><b>خطا در جستجو</b><span>توکن TMDB را بررسی کن و دوباره تلاش کن.</span></div></div>'
+  }
+}
+function selectTmdb(m){
+  $("type").value=m.type||"movie";$("title").value=m.title;$("year").value=m.year;$("rating").value=Number(m.rating||0).toFixed(1);
+  $("poster").value=m.poster;
+  let map=m.type==="tv"?tmdbTvGenres:tmdbGenres;
+  $("genreInput").value=(m.genre_ids||[]).map(id=>map[id]).filter(Boolean).join("، ");
+  $("searchResults").style.display="none"
+}
+render();
+</script></body></html>
