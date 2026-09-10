@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111318">
+<title>MyMovies</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0d0f14;color:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:22px 18px 12px;position:sticky;top:0;background:#0d0f14ee;backdrop-filter:blur(12px);z-index:2}
+h1{margin:0 0 14px;font-size:30px}.search{width:100%;padding:13px 15px;border:1px solid #292d38;border-radius:14px;background:#171a21;color:white;font-size:16px}
+main{padding:8px 16px 100px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:#171a21;border-radius:16px;overflow:hidden;box-shadow:0 5px 18px #0004}.poster{width:100%;aspect-ratio:2/3;object-fit:cover;background:#252936}
+.info{padding:10px}.title{font-weight:700;font-size:16px}.meta{font-size:12px;color:#aeb3c0;margin-top:5px}.rating{margin-top:7px;color:#ffd45c}
+.empty{text-align:center;color:#9298a6;padding:60px 15px}.fab{position:fixed;right:18px;bottom:22px;width:58px;height:58px;border:0;border-radius:50%;background:#fff;color:#111;font-size:30px;box-shadow:0 8px 25px #0008}
+dialog{width:min(92%,430px);border:1px solid #303542;border-radius:20px;background:#171a21;color:white;padding:0}
+dialog::backdrop{background:#0009}.modal{padding:20px}.modal h2{margin-top:0}
+label{display:block;color:#b7bdc9;font-size:13px;margin:12px 0 6px}input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #303542;background:#0f1116;color:white;font-size:15px}
+textarea{min-height:80px;resize:vertical}.actions{display:flex;gap:10px;margin-top:18px}.actions button{flex:1;padding:12px;border:0;border-radius:12px;font-size:15px;font-weight:700}.cancel{background:#2a2e38;color:white}.save{background:white;color:#111}
+</style>
+</head>
+<body>
+<header><h1>🎬 MyMovies</h1><input id="search" class="search" placeholder="جستجوی فیلم..."></header>
+<main><div id="grid" class="grid"></div><div id="empty" class="empty">هنوز فیلمی اضافه نکردی.<br>روی + بزن و اولین فیلمت را اضافه کن.</div></main>
+<button class="fab" id="add">+</button>
+
+<dialog id="dlg"><div class="modal">
+<h2>افزودن فیلم</h2>
+<label>نام فیلم</label><input id="title" placeholder="مثلاً Interstellar">
+<label>سال</label><input id="year" type="number" placeholder="2024">
+<label>ژانر</label><input id="genre" placeholder="علمی‌تخیلی">
+<label>امتیاز (۱ تا ۱۰)</label><input id="rating" type="number" min="1" max="10" step=".5" placeholder="9">
+<label>لینک پوستر (اختیاری)</label><input id="poster" placeholder="https://...">
+<label>وضعیت</label><select id="status"><option>دیده‌ام</option><option>می‌خواهم ببینم</option></select>
+<label>یادداشت</label><textarea id="note" placeholder="نظر من درباره فیلم..."></textarea>
+<div class="actions"><button class="cancel" id="cancel">لغو</button><button class="save" id="save">ذخیره</button></div>
+</div></dialog>
+<script>
+const key="mymovies_v1";
+let movies=JSON.parse(localStorage.getItem(key)||"[]");
+const $=id=>document.getElementById(id);
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const list=movies.filter(m=>(m.title+" "+m.genre+" "+m.year).toLowerCase().includes(q));
+ $("grid").innerHTML=list.map(m=>`
+ <article class="card">
+ <img class="poster" src="${m.poster||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600"><rect width="100%" height="100%" fill="#252936"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9da3b2" font-size="28">MyMovies</text></svg>')}" onerror="this.style.display='none'">
+ <div class="info"><div class="title">${esc(m.title)}</div><div class="meta">${esc(m.year||'')} · ${esc(m.genre||'')} · ${esc(m.status)}</div><div class="rating">${m.rating?'⭐ '+m.rating+'/10':'بدون امتیاز'}</div></div>
+ </article>`).join("");
+ $("empty").style.display=list.length?"none":"block";
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+$("add").onclick=()=>{$("dlg").showModal()};
+$("cancel").onclick=()=>{$("dlg").close()};
+$("save").onclick=()=>{
+ const title=$("title").value.trim(); if(!title){alert("اسم فیلم را وارد کن.");return}
+ movies.unshift({title,year:$("year").value,genre:$("genre").value,rating:$("rating").value,poster:$("poster").value.trim(),status:$("status").value,note:$("note").value});
+ localStorage.setItem(key,JSON.stringify(movies)); ["title","year","genre","rating","poster","note"].forEach(id=>$(id).value=""); $("dlg").close(); render();
+};
+$("search").oninput=render; render();
+</script>
+</body></html>
